@@ -1,0 +1,13 @@
+.toggle-button {
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+}
+
+.toggle-button:selected {
+    -fx-background-color: black;
+    -fx-background-radius: 0;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+}
