@@ -1,5 +1,4 @@
 .toggle-button {
-    -fx-background-color: white;
     -fx-background-radius: 0;
     -fx-min-width: 40;
     -fx-min-height: 40;
@@ -10,4 +9,8 @@
     -fx-background-radius: 0;
     -fx-min-width: 40;
     -fx-min-height: 40;
+}
+
+.root {
+    -fx-padding: 20;
 }
