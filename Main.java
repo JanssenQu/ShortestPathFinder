@@ -9,8 +9,10 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.FileInputStream;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,19 +34,13 @@ public class Main extends Application {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
 
-        VBox labels = new VBox();
-
-        // labels
-        Label source = new Label("Source: S");
-        Label destination = new Label("Destination: D");
-        labels.getChildren().add(source);
-        labels.getChildren().add(destination);
+        VBox texts = new VBox();
 
         // create message
         TextField message = new TextField();
         message.setEditable(false);
         message.setPrefWidth(250);
-        message.setText("Click on the tiles to build walls!");
+        message.setText("Click on the tiles to build land!");
 
         // title
         Image image = new Image(new FileInputStream("Shortest-Path-Finder.png"));
@@ -52,6 +48,12 @@ public class Main extends Application {
         imageView.setFitWidth(500);
         imageView.setPreserveRatio(true);
         imageView.setX(150);
+
+        // Info
+        Label info = new Label("The ship needs to find the shortest route to the treasure chest, \nbut the map has been lost. Can you redraw the lands?");
+
+        texts.getChildren().add(imageView);
+        texts.getChildren().add(info);
 
         walls = new boolean[10][12];
         AtomicBoolean isRan = new AtomicBoolean(false);
@@ -65,12 +67,25 @@ public class Main extends Application {
 
                 // label and disable the source and destination tiles
                 if (i == 0 && j == 0) {
-                    toggleBtn.setText("S");
+
+                    Image ship = new Image(new FileInputStream("ship.png"));
+                    ImageView shipNode = new ImageView(ship);
+                    shipNode.setFitWidth(18);
+                    shipNode.setFitHeight(18);
+                    toggleBtn.setGraphic(shipNode);
+
                     toggleBtn.setDisable(true);
                 }
 
                 else if (i == 11 && j == 9) {
-                    toggleBtn.setText("D");
+
+                    Image chest = new Image(new FileInputStream("chest.png"));
+                    ImageView chestNode = new ImageView(chest);
+                    chestNode.setFitWidth(18);
+                    chestNode.setFitHeight(18);
+                    toggleBtn.setGraphic(chestNode);
+
+                    toggleBtn.setStyle("-fx-background-color: #3CB371; -fx-border-color: #2E8B57;");
                     toggleBtn.setDisable(true);
                 }
 
@@ -114,7 +129,7 @@ public class Main extends Application {
 
                 // found a path if it the num of moves is greater than 0
                 if (pathFinder.getNumMoves() != 0) {
-                    message.setText("Used " + pathFinder.getNumMoves() + " tiles to get to the destination.");
+                    message.setText("Needs " + pathFinder.getNumMoves() + " tiles to sail to the destination.");
                 }
                 else {
                     message.setText("Impossible to find a path!");
@@ -133,34 +148,45 @@ public class Main extends Application {
 
         clearBtn.setOnAction(value ->  {
 
-            if (isRan.get()) {
-
-                // untoggle all the tiles
-                for (Node child : grid.getChildren()) {
-
-                    if (child instanceof ToggleButton) {
-
-                        ToggleButton b = (ToggleButton) child;
-                        b.setStyle("");
-                        b.setSelected(false);
-                    }
-                }
-                isRan.set(false);
-                message.setText("Click on the tiles to build walls!");;
-            }
-            else {
+            if (!isRan.get()) {
                 message.setText("The grid is already cleared!");
             }
+
+            // untoggle all the tiles and erase the path
+            for (Node child : grid.getChildren()) {
+
+                if (child instanceof ToggleButton) {
+
+                    ToggleButton b = (ToggleButton) child;
+                    b.setStyle("");
+                    b.setSelected(false);
+
+                    // reset the last tile to green
+                    if (GridPane.getRowIndex(child) == 9 && GridPane.getColumnIndex(child) == 11) {
+                        b.setStyle("-fx-background-color: #3CB371; -fx-border-color: #2E8B57;");
+                    }
+                }
+            }
+
+            // clearing walls from previous run
+            walls = new boolean[10][12];
+            isRan.set(false);
+            message.setText("Click on the tiles to build land!");
 
         });
         hBox.getChildren().add(clearBtn);
         hBox.getChildren().add(message);
 
         // assign the panes to their respected border
-        border.setTop(imageView);
-        border.setLeft(labels);
+        border.setTop(texts);
         border.setCenter(grid);
         border.setBottom(hBox);
+
+        //font
+        Font font = Font.loadFont( Main.class.getClassLoader().getResourceAsStream( "8-BitMadness.ttf"), 25);
+        info.setFont(font);
+        info.setTextFill(Paint.valueOf("#FFFFFF"));
+
 
         // scene and window
         primaryStage.setTitle("ShortestPathFinder");
@@ -168,7 +194,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
         primaryStage.setResizable(false);
-        primaryStage.getIcons().add(new Image("maze.png"));
+        primaryStage.getIcons().add(new Image("icon.png"));
         primaryStage.show();
     }
 

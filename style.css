@@ -2,15 +2,33 @@
     -fx-background-radius: 0;
     -fx-min-width: 40;
     -fx-min-height: 40;
+    -fx-opacity: 0.9;
+    -fx-background-color: #1E90FF;
+    -fx-border-color:#4169E1;
+    -fx-text-fill: white;
+    -fx-font-size: 15;
 }
 
 .toggle-button:selected {
-    -fx-background-color: black;
     -fx-background-radius: 0;
     -fx-min-width: 40;
     -fx-min-height: 40;
+    -fx-background-color: #3CB371;
+    -fx-border-color: #2E8B57;
+}
+
+.button {
+    -fx-min-width: 35;
 }
 
 .root {
     -fx-padding: 20;
+    -fx-background-image: url("island.png");
+}
+
+.label {
+    -fx-background-color: #a0522d;
+    -fx-border-color: #3c1414;
+    -fx-border-width: 5;
+    -fx-padding: 5;
 }
